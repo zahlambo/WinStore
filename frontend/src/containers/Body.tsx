@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Card from "../components/Card";
+import Card from "../components/Card/Card";
 
 interface AppData {
   id: string;
@@ -20,17 +20,17 @@ function Body() {
           : `${backendMainURL}/get_all_items`
       );
       data = await response.json();
-      console.log("Data fetched:", data);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
     setAllApps(data);
+    console.log(allApps)
   };
 
   useEffect(() => {searchData();}, []);
 
   return (
-    <div className="flex px-16 gap-8">
+    <div className="flex px-16 gap-8 flex-wrap">
       {allApps.map(app => (
         <Card key={app.id} id={app.id} name={app.name} icon={app.icon.replace(/width="[^"]+"/, 'width="75%"').replace(/height="[^"]+"/, 'height="75%"')} />
       ))}

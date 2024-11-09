@@ -1,10 +1,21 @@
-from fastapi import FastAPI
-from db import get_database
 import json
-from model import *
 import re
 
+from db import get_database
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from model import *
+
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 db = get_database()
 collection = db["apps"]
 
