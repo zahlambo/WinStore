@@ -11,6 +11,7 @@ Zahir should write how to get started and contribute in BE in here.
 ├── /public
 │   ├── /assets                # Static files like images, fonts, etc.
 │   │   ├── logo.png
+│   │   ├── group              # Group a specific type of asset
 │   │   └── ...
 ├── /src
 │   ├── /components            # Reusable UI components
