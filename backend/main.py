@@ -1,7 +1,8 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException,Depends
 from db import get_database
 import json
 from model import *
+from typing import List
 import re
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -20,13 +21,26 @@ app.add_middleware(
 
 @app.post("/addItem", response_model=str)
 async def addItem(item: AddItem):
+    # Check if an item with the same name or ID already exists
+    existing_item = await collection.find_one({"$or": [{"name": item.name}, {"id": item.id}]})
+    
+    if existing_item:
+        raise HTTPException(status_code=400, detail="Item with the same name or ID already exists")
+
     await collection.insert_one({"name": item.name, "icon": item.icon, "id": item.id})
     return "Item added successfully!"
 
 
 @app.get("/getAllItems")
-async def getAllItems():
-    items = await collection.find({}, {"_id": 0}).to_list()
+async def getAllItems(name: Optional[str] = None,id: Optional[str] = None):
+    query = {}
+
+    if name:
+        query["name"] = re.compile(name, re.IGNORECASE)
+    elif id:
+        query["id"] = re.compile(id, re.IGNORECASE)
+
+    items = await collection.find(query, {"_id": 0,"icon":0}).to_list()
     return items
 
 

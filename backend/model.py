@@ -5,3 +5,6 @@ class AddItem(BaseModel):
     name: str
     icon: str
     id: str
+class searchItems(AddItem):
+    name: Optional[str] = None
+    id: Optional[str] = None
