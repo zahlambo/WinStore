@@ -3,5 +3,8 @@ from typing import Optional
 
 class AddItem(BaseModel):
     name: str
-    Icon: str=Field(description="icon path actually",alias='icon')
-    ID: str
+    icon: str
+    id: str
+class searchItems(AddItem):
+    name: Optional[str] = None
+    id: Optional[str] = None
