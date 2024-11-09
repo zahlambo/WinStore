@@ -19,6 +19,20 @@ app.add_middleware(
 )
 
 
+@app.put("/updateItem", response_model=str)
+def updateItem(name: Optional[str] = None,id: Optional[str] = None, item: AddItem = Depends(AddItem)):
+    query = {}
+    if name:
+        query["name"] = name
+    elif id:
+        query["id"] = id
+    else:
+        raise HTTPException(status_code=400, detail="Name or ID must be provided")
+
+    items = collection.update_one(query)
+    return items
+
+
 @app.post("/addItem", response_model=str)
 async def addItem(item: AddItem):
     # Check if an item with the same name or ID already exists
@@ -34,23 +48,29 @@ async def addItem(item: AddItem):
 @app.get("/getAllItems")
 async def getAllItems(name: Optional[str] = None,id: Optional[str] = None):
     query = {}
-
-    if name:
-        query["name"] = re.compile(name, re.IGNORECASE)
+    if name and id:
+        query["$or"] = [{"name": re.compile(name, re.IGNORECASE)}, {"id": re.compile(id, re.IGNORECASE)}]
     elif id:
         query["id"] = re.compile(id, re.IGNORECASE)
 
-    items = await collection.find(query, {"_id": 0,"icon":0}).to_list()
+    elif name:
+        query["name"] = re.compile(name, re.IGNORECASE)
+    
+
+    items = await collection.find(query, {"_id": 0,}).to_list()
     return items
 
 
 @app.get("/items/{appQuery}", response_model=str)
 async def readItem(appQuery: str):
     wingetScript = "winget install "
-    for itemName in appQuery.split(","):
-        # Removing spaces from the string
-        itemName = itemName.strip().replace(" ", "")
-        item = await collection.find_one({"name": re.compile(itemName, re.IGNORECASE)})
-        if item:
-            wingetScript += item['id'] + " "
+    itemNames=[ name.strip().replace(" ", "") for name in appQuery.split(",")]
+    items= await collection.find({"name": {"$in": [re.compile(name, re.IGNORECASE) for name in itemNames]}}).to_list()
+
+    if items:
+        wingetScript += " ".join([item["id"] for item in items])
+    else:
+        raise HTTPException(status_code=404, detail="Items not found")
     return wingetScript
+
+
