@@ -1,4 +1,4 @@
-from pydantic import BaseModel,Field
+from pydantic import BaseModel,Field,EmailStr
 from typing import Optional
 
 class AddItem(BaseModel):
@@ -8,3 +8,18 @@ class AddItem(BaseModel):
 class searchItems(AddItem):
     name: Optional[str] = None
     id: Optional[str] = None
+
+class User(BaseModel):
+    username: str
+    password: str
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+class User(BaseModel):
+    username: str
+    email: EmailStr
+    password: str     
+    first_name: str
+    last_name: str
