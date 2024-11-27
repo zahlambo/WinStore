@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from core.db import get_database
 from model import *
 from fastapi.middleware.cors import CORSMiddleware
-from routers import apps,user
+from routers import apps,user,auth
 app = FastAPI()
 db = get_database()
 collection = db["apps"]
@@ -17,3 +17,4 @@ app.add_middleware(
 
 app.include_router(apps.router)
 app.include_router(user.router)
+app.include_router(auth.router)
