@@ -13,10 +13,10 @@ router = APIRouter(
 @router.put("/setAppsToUser")
 async def addApps(apps: str, request: Request,token= Depends(validateJwtFromCookies)):
     token = token.get("Email")
-    print(token)
+  
     # Check if a user with the same Email already exists
     existing_user = await db["User"].find_one({"Email": token})
-    print(existing_user,token)
+
     if not existing_user:
         raise HTTPException(
             status_code=400, detail="User with the same Email does not exist")

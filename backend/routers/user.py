@@ -41,7 +41,6 @@ async def addUser(user: User = Depends(User)):
     # Hash the password before saving
     hashed_password = hash_password(user.password)
     try:
-        print({"username": user.username, "Email": user.Email, "password": hashed_password, "first_name": user.first_name, "last_name": user.last_name, "apps": user.apps, "role": user.role})
         await collection.insert_one({"username": user.username, "Email": user.Email, "password": hashed_password, "first_name": user.first_name, "last_name": user.last_name, "apps": user.apps, "role": user.role})
     except DuplicateKeyError as e:
 
