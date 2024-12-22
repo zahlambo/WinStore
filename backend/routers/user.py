@@ -51,7 +51,7 @@ async def addUser(user: User = Depends(User)):
             raise HTTPException(
                 status_code=400, detail="A duplicate key error occurred"
             )
-    return "User added successfully!"
+    return {"detail":"User added successfully!"}
 
 
 @router.put("/User", response_model=str)

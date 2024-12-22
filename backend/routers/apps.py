@@ -23,7 +23,7 @@ async def update_item(appid: str, item: AddItem = Depends(AddItem)):
     else:
         raise HTTPException(status_code=404, detail="Item not found")
 
-    return "Item updated successfully!"
+    return {"detail":"Item updated successfully!"}
 
 
 @router.delete("/items/{appQuery}", response_model=str)
@@ -35,7 +35,7 @@ async def deleteItem(appQuery: str):
     else:
         raise HTTPException(status_code=404, detail="Item not found")
 
-    return {"message": "Item deleted successfully!"}
+    return {"detail": "Item deleted successfully!"}
 
 
 @router.post("/items", response_model=str)
@@ -48,7 +48,7 @@ async def addItem(name: str, icon: str, id: str):
             status_code=400, detail="Item with the same name or ID already exists")
 
     await collection.insert_one({"name": name, "icon": icon, "id": id})
-    return "Item added successfully!"
+    return {"detail":"Item added successfully!"}
 
 
 @router.get("/items")
