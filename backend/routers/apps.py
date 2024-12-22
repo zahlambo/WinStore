@@ -35,7 +35,7 @@ async def deleteItem(appQuery: str):
     else:
         raise HTTPException(status_code=404, detail="Item not found")
 
-    return "Item deleted successfully!"
+    return {"message": "Item deleted successfully!"}
 
 
 @router.post("/items", response_model=str)

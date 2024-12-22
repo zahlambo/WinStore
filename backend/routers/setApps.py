@@ -21,5 +21,10 @@ async def addApps(apps: str, request: Request,token= Depends(validateJwtFromCook
         raise HTTPException(
             status_code=400, detail="User with the same Email does not exist")
     # Insert the apps for the user
-    await db["user"].update_one({"Email": token}, {"$set": {"apps": apps}})
-    return {"detail": "Apps updated successfully"}
+    try:
+        await db["user"].update_one({"Email": token}, {"$set": {"apps": apps}})
+        return {"detail": "Apps updated successfully"}
+    except Exception as e:
+        raise HTTPException(
+            status_code=400, detail=f"Details: {e}")
+    
