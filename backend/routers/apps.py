@@ -1,14 +1,17 @@
 from fastapi import APIRouter, Depends, HTTPException
 from model import *
-from core.db import get_database
+from core.db import getDatabase
 import re
 
 
-router = APIRouter()
-db = get_database()
+router = APIRouter(
+    prefix="/apps",
+    tags=["Apps"]
+)
+db = getDatabase()
 collection = db["apps"]
 
-@router.put("/updateItem", response_model=str)
+@router.put("/items", response_model=str)
 async def update_item(appid: str, item: AddItem = Depends(AddItem)):
     # Check if an item with the same ID already exists
     existing_item = await collection.find_one({"id": appid})
@@ -20,22 +23,22 @@ async def update_item(appid: str, item: AddItem = Depends(AddItem)):
     else:
         raise HTTPException(status_code=404, detail="Item not found")
 
-    return "Item updated successfully!"
+    return {"detail":"Item updated successfully!"}
 
 
-@router.delete("/deleteItem", response_model=str)
-async def deleteItem(appid: str):
+@router.delete("/items/{appQuery}", response_model=str)
+async def deleteItem(appQuery: str):
     # Check if an item with the same ID already exists
-    existing_item = await collection.find_one({"id": appid})
+    existing_item = await collection.find_one({"id": appQuery})
     if existing_item:
-        await collection.delete_one({"id": appid})
+        await collection.delete_one({"id": appQuery})
     else:
         raise HTTPException(status_code=404, detail="Item not found")
 
-    return "Item deleted successfully!"
+    return {"detail": "Item deleted successfully!"}
 
 
-@router.post("/addItem", response_model=str)
+@router.post("/items", response_model=str)
 async def addItem(name: str, icon: str, id: str):
     # Check if an item with the same name or ID already exists
     existing_item = await collection.find_one({"$or": [{"name": name}, {"id": id}]})
@@ -45,10 +48,10 @@ async def addItem(name: str, icon: str, id: str):
             status_code=400, detail="Item with the same name or ID already exists")
 
     await collection.insert_one({"name": name, "icon": icon, "id": id})
-    return "Item added successfully!"
+    return {"detail":"Item added successfully!"}
 
 
-@router.get("/getAllItems")
+@router.get("/items")
 async def getAllItems(name: Optional[str] = None, id: Optional[str] = None):
     query = {}
     if name and id:

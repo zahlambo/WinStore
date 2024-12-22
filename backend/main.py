@@ -1,11 +1,17 @@
 from fastapi import FastAPI
-from core.db import get_database
+from core.db import getDatabase
 from model import *
 from fastapi.middleware.cors import CORSMiddleware
-from routers import apps,user
+from routers import apps,user,auth,setApps
 app = FastAPI()
-db = get_database()
+db = getDatabase()
 collection = db["apps"]
+
+@app.on_event("startup")
+async def startup_event():
+    await db["user"].create_index("username", unique=True)
+    await db["user"].create_index("email", unique=True)
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -17,3 +23,6 @@ app.add_middleware(
 
 app.include_router(apps.router)
 app.include_router(user.router)
+app.include_router(auth.router)
+app.include_router(setApps.router)
+
