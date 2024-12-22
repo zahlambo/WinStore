@@ -18,7 +18,7 @@ load_dotenv()
 
 secretKey = os.getenv("SECRET_KEY")
 algorithm = "HS256"
-accessTokenExpireMinutes = 30
+accessTokenExpireMinutes = os.getenv("ExpireMinutes")
 
 router = APIRouter(
     prefix="/auth",

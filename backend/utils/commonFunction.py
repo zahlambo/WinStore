@@ -8,7 +8,6 @@ load_dotenv()
 
 secretKey = os.getenv("SECRET_KEY")
 algorithm = "HS256"
-#accessTokenExpireMinutes = 30
 
 def validateJwtFromCookies(request: Request):
     token = request.cookies.get("accessToken")
