@@ -1,16 +1,19 @@
 from fastapi import FastAPI
 from core.db import getDatabase
-from model import *
 from fastapi.middleware.cors import CORSMiddleware
 from routers import apps,user,auth,setApps
+from contextlib import asynccontextmanager
+
 app = FastAPI()
 db = getDatabase()
 collection = db["apps"]
 
-@app.on_event("startup")
-async def startup_event():
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Code for startup
     await db["user"].create_index("username", unique=True)
     await db["user"].create_index("email", unique=True)
+    yield
 
 
 app.add_middleware(

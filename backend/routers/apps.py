@@ -66,7 +66,7 @@ async def getAllItems(name: Optional[str] = None, id: Optional[str] = None):
     return items
 
 
-@router.get("/items/{appQuery}", response_model=str)
+@router.get("/items", response_model=str)
 async def readItem(appQuery: str):
     wingetScript = "winget install "
     itemNames = [name.strip().replace(" ", "") for name in appQuery.split(",")]
