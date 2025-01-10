@@ -1,0 +1,13 @@
+[
+    {
+        "Id": "0x192.UniversalAndroidDebloaterGUI",
+        "Name": "Universal Android Debloater GUI",
+        "Version": "0.5.1",
+        "Publisher": "0x192",
+        "PublisherUrl": "",
+        "Description": "Cross-platform GUI written in Rust using ADB to debloat non-rooted android devices. Improve your privacy, the security and battery life of your device.",
+        "Homepage": "https://github.com/0x192/universal-android-debloater",
+        "License": "GNU General Public License v3.0",
+        "Installer Url": "https://github.com/0x192/universal-android-debloater/releases/download/0.5.1/uad_gui-windows.exe"
+    }
+]
